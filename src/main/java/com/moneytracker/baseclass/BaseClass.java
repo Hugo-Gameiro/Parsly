@@ -1,5 +1,7 @@
 package com.moneytracker.baseclass;
 
+import com.moneytracker.utils.ExtentManager;
+import com.moneytracker.utils.SychronizedWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,12 +20,17 @@ public class BaseClass {
     public static Properties properties;
     private static ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
 
+    public SychronizedWait sychronizedWait = new SychronizedWait();
+
     @BeforeSuite(groups = {"Regression"})
     public void loadConfiguration() {
+
+        ExtentManager.setExtent();
+
         try {
             properties = new Properties();
             FileInputStream inputStream = new FileInputStream(
-                    System.getProperty("user.dir") + "\\Configuration\\Config.properties");
+                    System.getProperty("user.dir") + "/Configuration/Config.properties");
             properties.load(inputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -43,7 +50,6 @@ public class BaseClass {
         switch (browser.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
-
                 threadLocalDriver.set(new ChromeDriver());
                 break;
             case "firefox":
@@ -59,14 +65,15 @@ public class BaseClass {
                 break;
         }
 
-        //getDriver().manage().deleteAllCookies();
+        getDriver().manage().deleteAllCookies();
         getDriver().manage().window().maximize();
         getDriver().get(properties.getProperty("url"));
+        new SychronizedWait().waitHere(1);
     }
 
     @AfterSuite(groups = {"Regression"})
-    public void newTearDown(){
-        getDriver().quit();
+    public void suiteTearDown(){
+        ExtentManager.endReport();
         threadLocalDriver.remove();
     }
 }

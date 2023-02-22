@@ -1,0 +1,13 @@
+{
+  "Email":"hugo.gameiro@iwanttoworkatparsly.com",
+  "Base Currency":"EUR",
+  "Additional Currency":"RON, Romanian leu",
+  "BankAccountName":"BPI",
+  "BankGroup":"Bank Account",
+  "BankAmmount_EUR":"1000",
+  "BankAmmount_Leu":"5000",
+  "PocketName":"Pocket",
+  "CashGroup":"Cash",
+  "DefaultCashAmmount":"1000",
+  "DefaultExpenseAmmount": "20"
+}

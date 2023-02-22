@@ -1,6 +1,6 @@
 package com.moneytracker.testcases;
 
-import com.moneytracker.baseclass.BaseClass;
+import com.moneytracker.page.BasePage;
 import com.moneytracker.page.DashboardPage;
 import com.moneytracker.page.HomepagePage;
 import com.moneytracker.utils.DataReader;
@@ -8,10 +8,12 @@ import org.testng.annotations.*;
 
 import java.util.HashMap;
 
-public class HomepageTest extends BaseClass {
+import static java.lang.Integer.parseInt;
 
-    private HomepagePage homepagePage;
+public class DashboardPageTest extends BasePage {
+
     private DashboardPage dashboardPage;
+    private HomepagePage homepagePage;
 
     @Parameters("browser")
     @BeforeMethod(groups = "Regression")
@@ -19,9 +21,11 @@ public class HomepageTest extends BaseClass {
         launchApp(browser);
     }
 
-   @Test(groups = "Regression", dataProviderClass = DataReader.class, dataProvider = "userData",
-            description = "Creates an account and validates the inserted data in the Dashbord page")
-    public void createAccount(HashMap<String, String> userData) {
+    @Test(groups = "Regression", dataProviderClass = DataReader.class, dataProvider = "userData",
+            description = "Validates values update after register an expense")
+    public void validateAddExpense(HashMap<String, String> userData) {
+        //Precondition - userCreation
+        // #if we use a sychronized account these steps are avoided, we only have to log in
         homepagePage = new HomepagePage();
         homepagePage.fillAccountName(userData.get("BankAccountName"));
         homepagePage.setBaseCurrency(userData.get("Base Currency"));
@@ -34,21 +38,25 @@ public class HomepageTest extends BaseClass {
         homepagePage.insertValue(userData.get("DefaultCashAmmount"));
         homepagePage.saveAccount();
         dashboardPage = homepagePage.clickFinishButton();
-        dashboardPage.validateDashboardTitle();
+
+        //Test register expenses
+        dashboardPage.insertExpense(userData.get("BankAccountName"), userData.get("DefaultExpenseAmmount"));
+        dashboardPage.insertExpense(userData.get("PocketName"), userData.get("DefaultExpenseAmmount"));
+
+        //
+        int bankExpectedAmmout =
+                parseInt(userData.get("BankAmmount_EUR")) - parseInt(userData.get("DefaultExpenseAmmount"));
+        int cashExpectedAmmout =
+                parseInt(userData.get("DefaultCashAmmount")) - parseInt(userData.get("DefaultExpenseAmmount"));
+
 
         dashboardPage.validateaccoutDetails(
-                userData.get("BankGroup"), userData.get("BankAccountName"), userData.get("DefaultCashAmmount"),
+                userData.get("BankGroup"), userData.get("BankAccountName"), bankExpectedAmmout + "",
                 dashboardPage.getGroupAccountData(userData.get("BankAccountName")));
 
         dashboardPage.validateaccoutDetails(
-                userData.get("CashGroup"), userData.get("PocketName"),userData.get("DefaultCashAmmount"),
+                userData.get("CashGroup"), userData.get("PocketName"), cashExpectedAmmout + "",
                 dashboardPage.getGroupAccountData(userData.get("PocketName")));
-    }
-
-    @Test(groups = "Regression", description = "Validates existing Account Groups Options")
-    public void validateAccountsGroupOptions() {
-        homepagePage = new HomepagePage();
-        homepagePage.assertAccountsGroupOptions();
     }
 
     @AfterMethod(groups = {"Regression"})
