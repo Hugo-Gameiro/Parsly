@@ -4,8 +4,10 @@
     <listeners>
         <listener class-name="com.moneytracker.utils.ListenerClass"></listener>
     </listeners>
-    <test thread-count="3" name="Regression">
-        <parameter name="browser" value="Chrome"></parameter>
+    <!-- if the tests are to run with a different browser either change the value or delete the line and pass this as
+    a parameter (described in README.md)-->
+    <parameter name="browser" value="Chrome"></parameter>
+    <test thread-count="3" parallel="methods" name="Regression">
         <classes>
             <class name="com.moneytracker.testcases.HomepageTest"/>
             <class name="com.moneytracker.testcases.LoginPageTest"/>

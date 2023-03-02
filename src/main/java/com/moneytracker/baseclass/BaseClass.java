@@ -7,8 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -69,6 +68,17 @@ public class BaseClass {
         getDriver().manage().window().maximize();
         getDriver().get(properties.getProperty("url"));
         new SychronizedWait().waitHere(1);
+    }
+
+    @Parameters("browser")
+    @BeforeMethod(groups = "Regression")
+    public void setup(String browser) throws InterruptedException {
+        launchApp(browser);
+    }
+
+    @AfterMethod(groups = {"Regression"})
+    public void testTearDown() {
+        getDriver().quit();
     }
 
     @AfterSuite(groups = {"Regression"})

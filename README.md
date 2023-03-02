@@ -18,7 +18,8 @@ Install the JAVA_HOME and MAVEN_HOME environment variables
 The test application can be executed by 2 ways: 
 
 1. IDE: selecting the Parsley/src/test/resources/regression.xml file and running it as testNG tests
-2. Command line: at yourPathlocation/Parsly executing the command: mvn clean test -DsuiteXmlFile=regression.xml
+2. Command line: at yourPathlocation/Parsly executing the command: mvn clean test -DsuiteXmlFile=regression.xml -Dbrowser= x
+   (x = chrome | firefox | ie)
 
 # Reports
 

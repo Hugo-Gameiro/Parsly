@@ -13,15 +13,7 @@ public class HomepageTest extends BaseClass {
     private HomepagePage homepagePage;
     private DashboardPage dashboardPage;
 
-    @Parameters("browser")
-    @BeforeMethod(groups = "Regression")
-    public void setup(String browser) throws InterruptedException {
-        launchApp(browser);
-    }
-
-   @Test(groups = "Regression", dataProviderClass = DataReader.class, dataProvider = "userData",
-            description = "Creates an account and validates the inserted data in the Dashbord page")
-    public void createAccount(HashMap<String, String> userData) {
+    public DashboardPage createUserSetUp(HashMap<String, String> userData){
         homepagePage = new HomepagePage();
         homepagePage.fillAccountName(userData.get("BankAccountName"));
         homepagePage.setBaseCurrency(userData.get("Base Currency"));
@@ -34,6 +26,13 @@ public class HomepageTest extends BaseClass {
         homepagePage.insertValue(userData.get("DefaultCashAmmount"));
         homepagePage.saveAccount();
         dashboardPage = homepagePage.clickFinishButton();
+        return dashboardPage;
+    }
+
+   @Test(groups = "Regression", dataProviderClass = DataReader.class, dataProvider = "userData",
+            description = "Creates an account and validates the inserted data in the Dashbord page")
+    public void createAccount(HashMap<String, String> userData) {
+        dashboardPage = createUserSetUp(userData);
         dashboardPage.validateDashboardTitle();
 
         dashboardPage.validateaccoutDetails(
@@ -49,10 +48,5 @@ public class HomepageTest extends BaseClass {
     public void validateAccountsGroupOptions() {
         homepagePage = new HomepagePage();
         homepagePage.assertAccountsGroupOptions();
-    }
-
-    @AfterMethod(groups = {"Regression"})
-    public void testTearDown() {
-        getDriver().quit();
     }
 }

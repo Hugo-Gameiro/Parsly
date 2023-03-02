@@ -3,17 +3,12 @@ package com.moneytracker.page;
 import com.moneytracker.enums.AccountsGroupEnum;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 
 import java.util.List;
 
 public class HomepagePage extends BasePage {
 
-    public HomepagePage() {
-        PageFactory.initElements(getDriver(), this);
-    }
 
     /*------------ WebElements Text ------------*/
 
@@ -21,78 +16,86 @@ public class HomepagePage extends BasePage {
 
     /*---------- WebElements locators ----------*/
 
-    private final String ACCOUNT_NAME = "//input[@placeholder='Account name']";
+    private final String ACCOUNT_NAME_LOCATOR = "//input[@placeholder='Account name']";
 
     private final String BASE_CURRENCY_INPUT = "//label[text()='Base Currency']//parent::div//input";
-    private final String ADDITIONAL_CURRENCY_INPUT =
+    private final String ADDITIONAL_CURRENCY_INPUT_LOCATOR =
             "//label[text()='Additional Currencies (optional)']//parent::div//input";
-    private final String CURRENCY_SELECTION = "//div[@class='visible menu transition']//div";
+    private final String CURRENCY_SELECTION_LOCATOR = "//div[@class='visible menu transition']//div";
 
-    private final String GROUP_SELECTOR_INPUT = "//label[text()='Group']//parent::div/div/div[@role='alert']";
-    private final String GROUP_SELECTOR_OPTIONS = "//label[text()='Group']//parent::div//div[@role='option']/span";
-    private final String BALANCE_INPUT = "//*[@placeholder='Balance']";
+    private final String GROUP_SELECTOR_INPUT_LOCATOR = "//label[text()='Group']//parent::div/div/div[@role='alert']";
+    private final String GROUP_SELECTOR_OPTIONS_LOCATOR = "//label[text()='Group']//parent::div//div[@role='option']/span";
+    private final String BALANCE_INPUT_LOCATOR = "//*[@placeholder='Balance']";
 
-    private final String SAVE_ACCOUNT_BUTTON = "//button[contains(text(),'Save Account')]";
+    private final String SAVE_ACCOUNT_BUTTON_LOCATOR = "//button[contains(text(),'Save Account')]";
 
-    private final String FINISH_BUTTON = "//button[contains(text(),'Finish')]";
+    private final String FINISH_BUTTON_LOCATOR = "//button[contains(text(),'Finish')]";
 
-    private final String SIGN_IN_BUTTON = "//a[contains(text(),'Sign in')]";
+    private final String SIGN_IN_BUTTON_LOCATOR = "//a[contains(text(),'Sign in')]";
 
     /*-------------- WebElements --------------*/
 
-    @FindBy(xpath = ACCOUNT_NAME)
-    private WebElement accountNameBox;
+    private WebElement accountNameBox(){
+        return driverAction.findElementByLocator(getDriver(), ACCOUNT_NAME_LOCATOR);
+    }
 
-    @FindBy(xpath = BASE_CURRENCY_INPUT)
-    private WebElement baseCurrencyInput;
+    private WebElement baseCurrencyInput(){
+        return driverAction.findElementByLocator(getDriver(), BASE_CURRENCY_INPUT);
+    }
 
-    @FindBy(xpath = ADDITIONAL_CURRENCY_INPUT)
-    private WebElement additionalCurrencyInput;
+    private WebElement additionalCurrencyInput(){
+        return driverAction.findElementByLocator(getDriver(), ADDITIONAL_CURRENCY_INPUT_LOCATOR);
+    }
 
-    @FindBy(xpath = GROUP_SELECTOR_INPUT)
-    private WebElement groupDropbox;
+    private WebElement groupDropbox(){
+        return driverAction.findElementByLocator(getDriver(), GROUP_SELECTOR_INPUT_LOCATOR);
+    }
 
-    @FindBy(xpath = BALANCE_INPUT)
-    private WebElement balanceInput;
+    private WebElement balanceInput(){
+        return driverAction.findElementByLocator(getDriver(), BALANCE_INPUT_LOCATOR);
+    }
 
-    @FindBy(xpath = SAVE_ACCOUNT_BUTTON)
-    private WebElement saveAccountButton;
+    private WebElement saveAccountButton(){
+        return driverAction.findElementByLocator(getDriver(), SAVE_ACCOUNT_BUTTON_LOCATOR);
+    }
 
-    @FindBy(xpath = FINISH_BUTTON)
-    private WebElement finishButton;
+    private WebElement finishButton(){
+        return driverAction.findElementByLocator(getDriver(), FINISH_BUTTON_LOCATOR);
+    }
 
-    @FindBy(xpath = SIGN_IN_BUTTON)
-    private WebElement signInButton;
+    private WebElement signInButton(){
+        return driverAction.findElementByLocator(getDriver(), SIGN_IN_BUTTON_LOCATOR);
+    }
 
     /*-------------- Actions --------------*/
 
     public void fillAccountName(String account) {
-        accountNameBox.click();
-        accountNameBox.sendKeys(account);
+        accountNameBox().click();
+        accountNameBox().sendKeys(account);
     }
 
     public void setBaseCurrency(String baseCurrency) {
-        baseCurrencyInput.click();
-        baseCurrencyInput.sendKeys(baseCurrency);
-        WebElement currencySelection = driverAction.findElementByLocator(getDriver(), CURRENCY_SELECTION);
+        baseCurrencyInput().click();
+        baseCurrencyInput().sendKeys(baseCurrency);
+        WebElement currencySelection = driverAction.findElementByLocator(getDriver(), CURRENCY_SELECTION_LOCATOR);
         currencySelection.click();
-        driverAction.loseFocus(baseCurrencyInput);
+        driverAction.loseFocus(baseCurrencyInput());
     }
 
     public void setAdditionalCurrencies(String currency) {
-        additionalCurrencyInput.click();
-        additionalCurrencyInput.sendKeys(currency);
-        WebElement currencySelection = driverAction.findElementByLocator(getDriver(), CURRENCY_SELECTION);
+        additionalCurrencyInput().click();
+        additionalCurrencyInput().sendKeys(currency);
+        WebElement currencySelection = driverAction.findElementByLocator(getDriver(), CURRENCY_SELECTION_LOCATOR);
         currencySelection.click();
         WebElement updateChangeRate = driverAction.findElementByContains(getDriver(), UPDATE_RATE_TEXT);
-        driverAction.loseFocus(additionalCurrencyInput);
+        driverAction.loseFocus(additionalCurrencyInput());
         Assert.assertTrue(updateChangeRate.isDisplayed());
     }
 
     public void selectAccountGroup(String optionText) {
-        groupDropbox.click();
+        groupDropbox().click();
 
-        List<WebElement> optionsList = driverAction.findElementsByLocator(getDriver(), GROUP_SELECTOR_OPTIONS);
+        List<WebElement> optionsList = driverAction.findElementsByLocator(getDriver(), GROUP_SELECTOR_OPTIONS_LOCATOR);
         boolean isOptionPresent = false;
         for (WebElement option : optionsList) {
             if (option.getText().equals(optionText)) {
@@ -114,8 +117,8 @@ public class HomepagePage extends BasePage {
 
         boolean isAccountGroupPresent = false;
 
-        groupDropbox.click();
-        List<WebElement> options = driverAction.findElementsByLocator(getDriver(), GROUP_SELECTOR_OPTIONS);
+        groupDropbox().click();
+        List<WebElement> options = driverAction.findElementsByLocator(getDriver(), GROUP_SELECTOR_OPTIONS_LOCATOR);
 
         Assert.assertEquals(AccountsGroupEnum.values().length, options.size(),
                 "Enum AccountsGroup and avaliable options should match");
@@ -137,22 +140,22 @@ public class HomepagePage extends BasePage {
     }
 
     public void insertValue(String value) {
-       balanceInput.click();
-       balanceInput.sendKeys(value);
-       driverAction.loseFocus(balanceInput);
+       balanceInput().click();
+       balanceInput().sendKeys(value);
+       driverAction.loseFocus(balanceInput());
     }
 
     public void saveAccount() {
-        saveAccountButton.click();
+        saveAccountButton().click();
     }
 
     public DashboardPage clickFinishButton(){
-        finishButton.click();
+        finishButton().click();
         return new DashboardPage();
     }
 
     public SignInPage signIn(){
-        signInButton.click();
+        signInButton().click();
         return new SignInPage();
     }
 }

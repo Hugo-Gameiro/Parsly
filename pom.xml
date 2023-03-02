@@ -96,6 +96,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M4</version>
                 <configuration>
+                    <properties>
+                        <browser>${browser}</browser>
+                    </properties>
                     <suiteXmlFiles>
                         <suiteXmlFile>src\test\resources\${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>

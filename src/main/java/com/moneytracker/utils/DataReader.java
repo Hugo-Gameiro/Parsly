@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class DataReader {
 
-    @DataProvider
+    @DataProvider(parallel = true)
     public Object[][] userData() {
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = null;

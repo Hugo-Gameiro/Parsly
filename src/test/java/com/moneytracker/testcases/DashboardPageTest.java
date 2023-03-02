@@ -15,29 +15,13 @@ public class DashboardPageTest extends BasePage {
     private DashboardPage dashboardPage;
     private HomepagePage homepagePage;
 
-    @Parameters("browser")
-    @BeforeMethod(groups = "Regression")
-    public void setup(String browser) throws InterruptedException {
-        launchApp(browser);
-    }
-
     @Test(groups = "Regression", dataProviderClass = DataReader.class, dataProvider = "userData",
             description = "Validates values update after register an expense")
     public void validateAddExpense(HashMap<String, String> userData) {
         //Precondition - userCreation
         // #if we use a sychronized account these steps are avoided, we only have to log in
-        homepagePage = new HomepagePage();
-        homepagePage.fillAccountName(userData.get("BankAccountName"));
-        homepagePage.setBaseCurrency(userData.get("Base Currency"));
-        homepagePage.setAdditionalCurrencies(userData.get("Additional Currency"));
-        homepagePage.selectAccountGroup(userData.get("BankGroup"));
-        homepagePage.insertValue(userData.get("DefaultCashAmmount"));
-        homepagePage.saveAccount();
-        homepagePage.fillAccountName(userData.get("PocketName"));
-        homepagePage.selectAccountGroup(userData.get("CashGroup"));
-        homepagePage.insertValue(userData.get("DefaultCashAmmount"));
-        homepagePage.saveAccount();
-        dashboardPage = homepagePage.clickFinishButton();
+        HomepageTest homepageTest = new HomepageTest();
+        dashboardPage = homepageTest.createUserSetUp(userData);
 
         //Test register expenses
         dashboardPage.insertExpense(userData.get("BankAccountName"), userData.get("DefaultExpenseAmmount"));
@@ -57,10 +41,5 @@ public class DashboardPageTest extends BasePage {
         dashboardPage.validateaccoutDetails(
                 userData.get("CashGroup"), userData.get("PocketName"), cashExpectedAmmout + "",
                 dashboardPage.getGroupAccountData(userData.get("PocketName")));
-    }
-
-    @AfterMethod(groups = {"Regression"})
-    public void testTearDown() {
-        getDriver().quit();
     }
 }

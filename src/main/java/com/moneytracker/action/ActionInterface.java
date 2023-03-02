@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface ActionInterface {
 
-    void fluentWait(WebDriver driver, WebElement element, int timeOut);
+    void fluentWait(WebDriver driver, WebElement element);
+    void fluentWaitByLocator(WebDriver driver, String locator);
     void click(WebDriver driver, WebElement element);
     void javaScriptClick(WebDriver driver, WebElement element);
     void moveToElement(WebDriver driver, WebElement element);
